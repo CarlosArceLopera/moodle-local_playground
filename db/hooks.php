@@ -21,5 +21,10 @@ $callbacks = [
         'callback' => \local_playground\hook_callbacks::class . '::extend_secondary_navigation',
         'priority' => 500,
     ],
+    [
+        'hook' => \core\hook\output\before_footer_html_generation::class,
+        'callback' => \local_playground\hook_callbacks::class . '::inject_mycourses_button',
+        'priority' => 500,
+    ],
 ];
 
