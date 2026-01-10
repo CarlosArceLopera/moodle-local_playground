@@ -40,7 +40,7 @@ function display_page() {
 
     $REQUEST = new \local_playground\request();
 
-    echo local_playground_page($CFG->wwwroot . '/local/playground/completed.php' . $id, $pagetitle, $pageheading, $context);
+    echo local_playground_page('/local/playground/completed.php' . $id, $pagetitle, $pageheading, $context);
 
     $HTMLcontent = '';
     //**********************

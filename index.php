@@ -28,7 +28,7 @@ $context = context_system::instance();
 $pagetitle = get_string('pluginname', 'local_playground');
 $pageheading = get_string('pluginname', 'local_playground');
 
-echo local_playground_page($CFG->wwwroot . '/local/playground/index.php', $pagetitle, $pageheading, $context);
+echo local_playground_page('/local/playground/index.php', $pagetitle, $pageheading, $context);
 
 $HTMLcontent = '';
 //**********************
