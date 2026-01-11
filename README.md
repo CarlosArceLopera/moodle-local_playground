@@ -21,7 +21,7 @@
 
 1. Download or clone the plugin into your Moodle installation:
    ```bash
-   git clone https://github.com/glendon-its/moodle-local_playground.git /path/to/moodle/local/playground
+   git@github.com:YorkUITInnovation/moodle-local_playground.git /path/to/moodle/local/playground
    ```
 
 2. From your Moodle administration dashboard, navigate to:
@@ -50,21 +50,14 @@ The plugin uses Moodle's standard email settings. Ensure your Moodle instance is
 
 ## Usage
 
-### For Instructors
-
-1. Navigate to any course, module, or activity page
-2. Look for the "Playground creation" link in the secondary navigation menu
+1. Navigate to My courses
+2. Look for the "Create playground course"
 3. Enter a name for your playground course (e.g., "Math 2340")
 4. Click "Create my playground course"
 5. You'll be redirected to your new course as an instructor
 
 **Note**: The final course name will be: "My Playground Course [Your Name] [Your Title]"
 
-### For Administrators
-
-- **Monitor Playground Courses**: View all playground courses in the designated category
-- **Configure Default Category**: Set where new playground courses are created
-- **Email Templates**: Customize email notifications via language packs
 
 ## Technical Details
 
@@ -77,8 +70,7 @@ The plugin uses Moodle's standard email settings. Ensure your Moodle instance is
 - Uses standard Moodle course and user enrollment structures
 
 ### Hooks & Callbacks
-The plugin uses Moodle's hook system to integrate with the navigation:
-- **Secondary Navigation Hook**: Adds "Playground creation" link to course/activity pages
+The plugin uses Moodle's hook system to integrate with the navigation
 
 ### File Structure
 
@@ -111,9 +103,7 @@ playground/
 │   └── step1.mustache          # Course creation form
 ├── ajax.php                    # AJAX endpoint for course creation
 ├── completed.php               # Course creation completion page
-├── config.php                  # Plugin configuration (Moodle 5.1 compatibility)
 ├── index.php                   # Main plugin entry point
-├── lib.php                     # Plugin library functions
 ├── locallib.php                # Local library functions
 ├── settings.php                # Admin settings definition
 ├── version.php                 # Plugin version information
@@ -136,29 +126,7 @@ This plugin is licensed under the [GNU General Public License v3 (GPLv3)](LICENS
 ## Authors
 
 - **Original Developer**: Patrick Thibaudeau
-- **Copyright**: Glendon ITS, York University
-
-## Support & Contributing
-
-For bug reports, feature requests, or contributions, please visit:
-- Website: [Glendon ITS](http://www.glendon.yorku.ca)
-
-## Changelog
-
-### Version 2.1.0 (2025-01-09)
-- Updated to Moodle 5.1 standards
-- Public folder structure support
-- Rebranded from "Sandbox" to "Playground"
-- Settings naming convention updated (sandbox_* → playground_*)
-- Removed redundant plugin display in settings list
-- Fixed language file syntax errors
-- Improved code standards compliance
-
-### Version 2.0.0
-- Initial stable release
-- Course creation functionality
-- Email notifications
-- Secondary navigation integration
+- **Copyright**: York University - UIT It Innovation & Academic Technologies
 
 ## Privacy
 
@@ -168,42 +136,4 @@ This plugin complies with Moodle's privacy standards:
 - **GDPR Compliance**: User information is handled by Moodle's standard course and enrollment processes
 
 For more information, see the privacy policy in the plugin settings.
-
-## Troubleshooting
-
-### Plugin Not Appearing in Navigation
-- Ensure you're logged in as an instructor or admin
-- Check that you're viewing a course, activity, or category page
-- Clear your browser cache and Moodle cache
-
-### Course Creation Failing
-- Verify the playground course category exists and is valid
-- Check that you have proper course creation capabilities
-- Review Moodle logs for detailed error messages
-
-### Emails Not Sending
-- Verify SMTP configuration in Moodle admin settings
-- Check that sender email is configured
-- Review mail logs for delivery errors
-
-## FAQ
-
-**Q: Can students create playground courses?**
-A: Only instructors and administrators can create playground courses. Standard students do not see the creation link.
-
-**Q: Can I delete a playground course?**
-A: Yes, playground courses are standard Moodle courses and can be managed like any other course.
-
-**Q: How many playground courses can I create?**
-A: There's no limit to the number of playground courses you can create.
-
-**Q: Are playground courses visible to students?**
-A: No, playground courses are not automatically enrolled to students and are intended for instructor use only.
-
-**Q: Can I move content from a playground course to another course?**
-A: Yes, playground courses are full-featured Moodle courses. You can use Moodle's standard course backup/restore functionality or content copy features.
-
----
-
-*For questions or support, contact Glendon ITS at York University*
 
