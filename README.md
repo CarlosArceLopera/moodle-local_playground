@@ -6,17 +6,16 @@
 
 ### Key Features
 
-- **Quick Course Creation**: Instructors can create their own playground course on-demand
+- **Quick Course Creation**: Users can create their own playground course on-demand
 - **One-Click Access**: Simple interface for creating and accessing playground courses
 - **Course Organization**: Courses are organized in a designated course category (configurable by administrators)
-- **Auto-Enrollment**: Requesting instructors are automatically enrolled as instructors in their new playground course
+- **Auto-Enrollment**: Requesting users are automatically enrolled as instructors in their new playground course
 - **Email Notifications**: Automated confirmation emails sent when a playground course is created
 - **Privacy Focused**: No user data is stored; the plugin simply creates courses and enrollments
 
 ## Requirements
 
-- **Moodle Version**: 5.1 or later
-- **PHP Version**: 8.3 or later (as per Moodle 5.1 requirements)
+- **Moodle Version**: 5.0 or later
 
 ## Installation
 

@@ -1,17 +1,12 @@
 <?php
 /**
- * *************************************************************************
- * *                           playground                                 **
- * *************************************************************************
- * @package     local                                                     **
- * @subpackage  playground                                                **
- * @name        playground                                                **
- * @copyright   Glendon ITS York University                               **
- * @link        http://www.glendon.yorku.ca                               **
- * @author      Patrick Thibaudeau                                        **
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later  **
- * *************************************************************************
- * *************************************************************************/
+ * Hook callback implementations for the playground plugin.
+ *
+ * @package    local_playground
+ * @copyright  2026 York University UIT It Innovation & Academic Technologies
+ * @author     Patrick Thibaudeau
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace local_playground;
 

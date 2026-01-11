@@ -1,18 +1,12 @@
 <?php
-
 /**
- * *************************************************************************
- * *                           playground                                 **
- * *************************************************************************
- * @package     local                                                     **
- * @subpackage  playground                                                **
- * @name        playground                                                **
- * @copyright   Glendon ITS York University                               **
- * @link        http://www.glendon.yorku.ca                               **
- * @author      Patrick Thibaudeau                                        **
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later  **
- * *************************************************************************
- * ************************************************************************ */
+ * Request class for handling playground course creation.
+ *
+ * @package    local_playground
+ * @copyright  2026 York University UIT It Innovation & Academic Technologies
+ * @author     Patrick Thibaudeau
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace local_playground;
 
@@ -97,20 +91,24 @@ class request {
         }
 
         $user = $DB->get_record('user', array('id' => $userid));
-        $fullname = "My Playground Course " . $title;
+        $fullname = get_sting('playground_course_name') . " " . $title;
         $shortname = get_string('playground_course_name', 'local_playground') . ' ' . fullname($user) . ' ' . $i;
 
-        //Does category playground exist? if not create it
-        if (!$category = $DB->get_record('course_categories', array('name' => 'Playground'))) {
+        // Get the configured playground category from settings.
+        $categoryId = get_config('local_playground', 'playground_category');
 
-            $cdata = array();
-            $cdata['name'] = 'Playground';
-            $cdata['parent'] = 0;
-            $cdata['visible'] = 1;
-
-            $categoryId = $DB->insert_record('course_categories', $cdata, true);
-        } else {
-            $categoryId = $category->id;
+        // If no category is configured or the category doesn't exist, use the default category (Miscellaneous).
+        if (empty($categoryId) || !$DB->record_exists('course_categories', array('id' => $categoryId))) {
+            // Fall back to the top-level Miscellaneous category (id = 1) or create a Playground category.
+            if (!$category = $DB->get_record('course_categories', array('name' => 'Playground'))) {
+                $cdata = array();
+                $cdata['name'] = 'Playground';
+                $cdata['parent'] = 0;
+                $cdata['visible'] = 1;
+                $categoryId = $DB->insert_record('course_categories', $cdata, true);
+            } else {
+                $categoryId = $category->id;
+            }
         }
 
         $data = new \stdClass();
