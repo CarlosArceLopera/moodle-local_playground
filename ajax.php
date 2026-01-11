@@ -25,7 +25,7 @@ global $CFG, $USER;
 
 switch ($action) {
 
-    case 'create_sandbox_course':
+    case 'create_playground_course':
         $url = $REQUEST->createSandboxCourse($USER->id, $title);
         echo $url;
         break;

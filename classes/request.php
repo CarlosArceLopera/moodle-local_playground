@@ -17,7 +17,7 @@
 namespace local_playground;
 
 /**
- * Description of sandbox
+ * Description of playground
  *
  * @author patrick
  */
@@ -98,9 +98,9 @@ class request {
 
         $user = $DB->get_record('user', array('id' => $userid));
         $fullname = "My Playground Course " . $title;
-        $shortname = get_string('sanbox_course_name', 'local_playground') . ' ' . fullname($user) . ' ' . $i;
+        $shortname = get_string('playground_course_name', 'local_playground') . ' ' . fullname($user) . ' ' . $i;
 
-        //Does category sandbox exist? if not create it
+        //Does category playground exist? if not create it
         if (!$category = $DB->get_record('course_categories', array('name' => 'Playground'))) {
 
             $cdata = array();
@@ -132,11 +132,11 @@ class request {
         $this->enrolUser($role->id, $newCourse->id, $user->username);
 
         if (!$newCourse) {
-            error_log("Cannot create sandbox course for user: " . $userid);
+            error_log("Cannot create playground course for user: " . $userid);
         }
         
 
-        $url = $CFG->wwwroot . '/local/sandbox/completed.php?coursetype=sc&id=' . $newCourse->id;
+        $url = $CFG->wwwroot . '/local/playground/completed.php?coursetype=sc&id=' . $newCourse->id;
 
         return $url;
     }

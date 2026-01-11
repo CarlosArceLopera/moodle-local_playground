@@ -32,7 +32,7 @@ export const init = () => {
         nextButton.classList.add("animatedellipsis");
 
         const title = encodeURIComponent(playgroundTitle.value);
-        const url = `ajax.php?action=create_sandbox_course&title=${title}`;
+        const url = `ajax.php?action=create_playground_course&title=${title}`;
 
         // eslint-disable-next-line no-console
         console.log('Fetching URL:', url);

@@ -100,62 +100,9 @@ class hook_callbacks {
 
         // Generate the button HTML with CSS to position it at top right
         $button_url = new \moodle_url('/local/playground/index.php');
-        $button_text = get_string('create_sandbox_course', 'local_playground');
+        $button_text = get_string('create_playground_course', 'local_playground');
 
-        $button_html = <<<HTML
-<style>
-    /* Position the playground button in the header action area */
-    #local-playground-mycourses-button {
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-    }
-    
-    #local-playground-mycourses-button form {
-        display: inline-block;
-    }
-    
-    #local-playground-mycourses-button .btn {
-        margin: 0;
-        padding: 0.375rem 0.75rem;
-        font-size: 0.875rem;
-    }
-</style>
-
-<div id="local-playground-mycourses-button">
-    <form action="{$button_url}" method="get" class="d-inline">
-        <button type="submit" class="btn btn-primary">
-            <i class="fa fa-flask" aria-hidden="true"></i>
-            {$button_text}
-        </button>
-    </form>
-</div>
-
-<script>
-    // Move the playground button to the header area to align with course management buttons
-    document.addEventListener('DOMContentLoaded', function() {
-        var playgroundButton = document.getElementById('local-playground-mycourses-button');
-        if (playgroundButton) {
-            // Find the header actions container or create one
-            var headerActionsContainer = document.querySelector('.page-header-actions');
-            
-            if (headerActionsContainer) {
-                // Move button to header actions
-                headerActionsContainer.appendChild(playgroundButton.cloneNode(true));
-                playgroundButton.remove();
-            } else {
-                // Alternative: try to find the btn-group and add to it
-                var btnGroup = document.querySelector('.btn-group');
-                if (btnGroup) {
-                    // Insert after the btn-group
-                    btnGroup.parentNode.insertBefore(playgroundButton, btnGroup.nextSibling);
-                    playgroundButton.style.marginLeft = '10px';
-                }
-            }
-        }
-    });
-</script>
-HTML;
+        $button_html = $OUTPUT->render_from_template('local_playground/mycourses_button', ['button_url' => $button_url, 'button_text' => $button_text]);
 
         // Inject the button HTML before the footer
         $hook->add_html($button_html);

@@ -25,12 +25,56 @@
         "label": "Create my playground course"
     }
 }}
-<div class="local-playground-mycourses-button" style="display: inline-block; margin-left: 8px;">
-    <form action="{{playgroundurl}}" method="get" class="d-inline">
-        <button type="submit" class="btn btn-primary" style="margin: 4px 0;">
-            <i class="fa fa-flask" aria-hidden="true"></i>
-            {{label}}
+<style>
+    /* Position the playground button in the header action area */
+    #local-playground-mycourses-button {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+    }
+
+    #local-playground-mycourses-button form {
+        display: inline-block;
+    }
+
+    #local-playground-mycourses-button .btn {
+        margin: 0;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+</style>
+
+
+    <form id="local-playground-mycourses-button" action="{{button_url}}" method="get" class="d-inline">
+        <button type="submit" class="btn btn-primary">
+            {{button_text}}
         </button>
     </form>
-</div>
 
+
+<script>
+    // Move the playground button to the header area to align with course management buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        var playgroundButton = document.getElementById('local-playground-mycourses-button');
+        console.log('Playground Button:', playgroundButton);
+        if (playgroundButton) {
+            // Find the my-action-buttons my-action-buttons-right div (for users with course creation capability)
+            var actionButtonsRight = document.querySelector('.my-action-buttons.my-action-buttons-right');
+            console.log('Action buttons right:', actionButtonsRight);
+            if (actionButtonsRight) {
+                // Move button to the action buttons container
+                actionButtonsRight.appendChild(playgroundButton.cloneNode(true));
+                playgroundButton.remove();
+            } else {
+                // Alternative: try to find the header-actions-container
+                var headerActions = document.querySelector('.header-actions-container');
+                console.log('Header actions (fallback):', headerActions);
+                if (headerActions) {
+                    // Move button to header actions container
+                    headerActions.appendChild(playgroundButton.cloneNode(true));
+                    playgroundButton.remove();
+                }
+            }
+        }
+    });
+</script>

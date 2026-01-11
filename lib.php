@@ -47,7 +47,7 @@ function local_playground_render_mycourses_button() {
     // Create context data for the template
     $context = new \stdClass();
     $context->playgroundurl = new \moodle_url('/local/playground/index.php');
-    $context->label = get_string('create_sandbox_course', 'local_playground');
+    $context->label = get_string('create_playground_course', 'local_playground');
 
     // Render using template
     return $OUTPUT->render_from_template('local_playground/mycourses_button', $context);
