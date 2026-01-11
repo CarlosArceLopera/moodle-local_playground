@@ -27,7 +27,7 @@ class request {
         require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
     }
 
-    public function enrolUser($roleid, $courseid, $username) {
+    public function enrol_user($roleid, $courseid, $username) {
         global $CFG, $DB;
         $user = $DB->get_record('user', array('username' => $username, 'deleted' => 0), '*', MUST_EXIST);
         $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
@@ -127,7 +127,7 @@ class request {
 
         //Now enrol requesting user as teacher
         $role = $DB->get_record('role', array('shortname' => 'editingteacher'));
-        $this->enrolUser($role->id, $newCourse->id, $user->username);
+        $this->enrol_user($role->id, $newCourse->id, $user->username);
 
         if (!$newCourse) {
             error_log("Cannot create playground course for user: " . $userid);
