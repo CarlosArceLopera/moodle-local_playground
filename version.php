@@ -13,9 +13,9 @@
  * *************************************************************************
  * *************************************************************************/
 
-$plugin->version = 2025110505;
+$plugin->version = 2026011200;
 // Moodle version required
-$plugin->requires = 2024100700; // Moodle 5.1
+$plugin->requires = 2025041400; // Moodle 5.0 release
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.1.0';
+$plugin->release = '1.0.0';
 $plugin->component = 'local_playground';
