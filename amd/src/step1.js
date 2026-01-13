@@ -7,7 +7,7 @@
 export const init = (sesskey) => {
     // eslint-disable-next-line no-console
     console.log('Step1 init called with sesskey');
-
+// rebuild and grunt
     const nextButton = document.getElementById('next');
     const playgroundTitle = document.getElementById('playgroundtitle');
 
@@ -24,7 +24,7 @@ export const init = (sesskey) => {
 
     // eslint-disable-next-line no-console
     console.log('Adding click event listener');
-
+    console.log('Adding click event listener2');
     nextButton.addEventListener('click', () => {
         // eslint-disable-next-line no-console
         console.log('Next button clicked!');
