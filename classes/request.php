@@ -91,7 +91,7 @@ class request {
         }
 
         $user = $DB->get_record('user', array('id' => $userid));
-        $fullname = get_sting('playground_course_name') . " " . $title;
+        $fullname = get_string('playground_course_name', 'local_playground') . " " . $title;
         $shortname = get_string('playground_course_name', 'local_playground') . ' ' . fullname($user) . ' ' . $i;
 
         // Get the configured playground category from settings.

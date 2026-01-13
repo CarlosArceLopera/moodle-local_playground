@@ -1,11 +1,12 @@
 /**
  * Initialize step1 functionality
  * @module local_playground/step1
+ * @param {string} sesskey - The Moodle session key for AJAX requests
  */
 
-export const init = () => {
+export const init = (sesskey) => {
     // eslint-disable-next-line no-console
-    console.log('Step1 init called');
+    console.log('Step1 init called with sesskey');
 
     const nextButton = document.getElementById('next');
     const playgroundTitle = document.getElementById('playgroundtitle');
@@ -32,7 +33,7 @@ export const init = () => {
         nextButton.classList.add("animatedellipsis");
 
         const title = encodeURIComponent(playgroundTitle.value);
-        const url = `ajax.php?action=create_playground_course&title=${title}`;
+        const url = `ajax.php?action=create_playground_course&title=${title}&sesskey=${sesskey}`;
 
         // eslint-disable-next-line no-console
         console.log('Fetching URL:', url);
@@ -44,12 +45,16 @@ export const init = () => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.text();
+                return response.json();
             })
             .then(resultData => {
                 // eslint-disable-next-line no-console
                 console.log('Result data:', resultData);
-                window.location.href = resultData;
+                if (resultData.success && resultData.url) {
+                    window.location.href = resultData.url;
+                } else {
+                    throw new Error(resultData.error || 'Unknown error occurred');
+                }
             })
             .catch(error => {
                 // eslint-disable-next-line no-console

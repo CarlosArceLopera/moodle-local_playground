@@ -32,6 +32,6 @@ A playground course is a great opportunity to try things out without affecting y
 </div>
 {{#js}}
 require(['local_playground/step1'], function(mod) {
-    mod.init();
+    mod.init('{{sesskey}}');
 });
 {{/js}}

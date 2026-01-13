@@ -30,12 +30,17 @@ function display_page() {
 
     $context = context_system::instance();
 
+    // Check if user is eligible to create playground courses
+    if (!local_playground_is_user_eligible()) {
+        throw new moodle_exception('nopermissions', 'error', '', get_string('pluginname', 'local_playground'));
+    }
+
     $pagetitle = get_string('pluginname', 'local_playground');
     $pageheading = get_string('pluginname', 'local_playground');
 
     $REQUEST = new \local_playground\request();
 
-    echo local_playground_page('/local/playground/completed.php' . $id, $pagetitle, $pageheading, $context);
+    echo local_playground_page('/local/playground/completed.php?id=' . $id, $pagetitle, $pageheading, $context);
 
     $HTMLcontent = '';
     //**********************

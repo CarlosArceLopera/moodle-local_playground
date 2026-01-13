@@ -19,6 +19,10 @@ require_login(1, false); //Use course 1 because this has nothing to do with an a
 
 $context = context_system::instance();
 
+// Check if user is eligible to create playground courses
+if (!local_playground_is_user_eligible()) {
+    throw new moodle_exception('nopermissions', 'error', '', get_string('pluginname', 'local_playground'));
+}
 
 $pagetitle = get_string('pluginname', 'local_playground');
 $pageheading = get_string('pluginname', 'local_playground');
@@ -34,7 +38,10 @@ echo $OUTPUT->header();
 //**********************
 //*** DISPLAY CONTENT **
 //**********************-
-echo $OUTPUT->render_from_template('local_playground/step1', null);
+$templatecontext = [
+    'sesskey' => sesskey()
+];
+echo $OUTPUT->render_from_template('local_playground/step1', $templatecontext);
 //**********************
 //*** DISPLAY FOOTER ***
 //**********************

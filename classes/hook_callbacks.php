@@ -10,6 +10,11 @@
 
 namespace local_playground;
 
+defined('MOODLE_INTERNAL') || die();
+
+// Include locallib.php for the eligibility function
+require_once(__DIR__ . '/../locallib.php');
+
 use core\navigation\navigation_node;
 use core\output\pix_icon;
 
@@ -28,6 +33,11 @@ class hook_callbacks {
 
         // Only add the link if the user is logged in.
         if (!isloggedin() || isguestuser()) {
+            return;
+        }
+
+        // Check if user is eligible to create playground courses
+        if (!\local_playground_is_user_eligible()) {
             return;
         }
 
@@ -84,6 +94,11 @@ class hook_callbacks {
 
         // Only show if user is logged in and not a guest
         if (!isloggedin() || isguestuser()) {
+            return;
+        }
+
+        // Check if user is eligible to create playground courses
+        if (!\local_playground_is_user_eligible()) {
             return;
         }
 
