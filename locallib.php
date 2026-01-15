@@ -60,10 +60,8 @@ function local_playground_is_user_eligible($user = null) {
     $allowed_idnumber_prefixes_config = get_config('local_playground', 'allowed_idnumber_prefixes');
     $require_both = get_config('local_playground', 'require_both_conditions');
 
-    // If require_both is not set, default to true
-    if ($require_both === false) {
-        $require_both = true;
-    }
+    // Convert to boolean - config returns '1' or '0' as strings or false if not set
+    $require_both = !empty($require_both);
 
     // Determine which checks are enabled
     $profile_checking_enabled = !empty($profile_field_shortname) && !empty($allowed_user_types_config);
@@ -87,7 +85,7 @@ function local_playground_is_user_eligible($user = null) {
                 'fieldid' => $profile_field->id
             ));
 
-            if ($profile_data) {
+            if ($profile_data && !empty($profile_data->data)) {
                 $ldap_user_types = strtolower(trim($profile_data->data));
 
                 // Parse allowed user types (comma-separated)
@@ -124,27 +122,34 @@ function local_playground_is_user_eligible($user = null) {
 
     // Return based on require_both setting and which checks are enabled
     if ($require_both) {
-        // User must meet both enabled conditions
+        // User must meet ALL enabled conditions
         if ($profile_checking_enabled && $idnumber_checking_enabled) {
+            // Both checks enabled: user must pass both
             return ($has_allowed_type && $has_valid_idnumber);
         } else if ($profile_checking_enabled) {
             // Only profile check is enabled, user must pass it
             return $has_allowed_type;
-        } else {
+        } else if ($idnumber_checking_enabled) {
             // Only ID number check is enabled, user must pass it
             return $has_valid_idnumber;
+        } else {
+            // No checks enabled (shouldn't reach here due to earlier check)
+            return false;
         }
     } else {
-        // User can meet either enabled condition
+        // User can meet ANY enabled condition (OR logic)
         if ($profile_checking_enabled && $idnumber_checking_enabled) {
             // Both checks enabled: pass if user meets either
             return ($has_allowed_type || $has_valid_idnumber);
         } else if ($profile_checking_enabled) {
             // Only profile check is enabled, user must pass it
             return $has_allowed_type;
-        } else {
+        } else if ($idnumber_checking_enabled) {
             // Only ID number check is enabled, user must pass it
             return $has_valid_idnumber;
+        } else {
+            // No checks enabled (shouldn't reach here due to earlier check)
+            return false;
         }
     }
 }

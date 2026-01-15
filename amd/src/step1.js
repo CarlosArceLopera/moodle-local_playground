@@ -42,10 +42,13 @@ export const init = (sesskey) => {
             .then(response => {
                 // eslint-disable-next-line no-console
                 console.log('Response received:', response);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+                // Parse JSON even if response is not ok to get error message
+                return response.json().then(data => {
+                    if (!response.ok) {
+                        throw new Error(data.error || `HTTP error ${response.status}`);
+                    }
+                    return data;
+                });
             })
             .then(resultData => {
                 // eslint-disable-next-line no-console
@@ -61,6 +64,7 @@ export const init = (sesskey) => {
                 console.error('Error creating playground course:', error);
                 nextButton.textContent = "Error - Please try again";
                 nextButton.classList.remove("animatedellipsis");
+                alert('Error creating playground course: ' + error.message);
             });
     });
 };

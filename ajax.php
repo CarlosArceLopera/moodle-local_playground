@@ -16,14 +16,27 @@ require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/classes/request.php');
 
-require_login();
-require_sesskey();
+// Set JSON header early to ensure proper response format
+header('Content-Type: application/json');
 
-// Check if user is eligible to create playground courses
-if (!local_playground_is_user_eligible()) {
+try {
+    require_login();
+    require_sesskey();
+
+    // Check if user is eligible to create playground courses
+    if (!local_playground_is_user_eligible()) {
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => 'You do not have permission to create playground courses'
+        ]);
+        exit;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'You do not have permission to create playground courses'
+        'error' => 'Authentication error: ' . $e->getMessage()
     ]);
     exit;
 }
@@ -41,6 +54,7 @@ switch ($action) {
             $url = $REQUEST->createSandboxCourse($USER->id, $title);
 
             // Return JSON response for better error handling
+            http_response_code(200);
             echo json_encode([
                 'success' => true,
                 'url' => $url
@@ -50,14 +64,16 @@ switch ($action) {
             error_log('Playground course creation error: ' . $e->getMessage());
             error_log('Stack trace: ' . $e->getTraceAsString());
 
+            http_response_code(500);
             echo json_encode([
                 'success' => false,
                 'error' => $e->getMessage(),
-                'trace' => $CFG->debugdisplay ? $e->getTraceAsString() : 'Enable debug mode to see trace'
+                'trace' => (!empty($CFG->debugdisplay) && $CFG->debugdisplay) ? $e->getTraceAsString() : null
             ]);
         }
         break;
     default:
+        http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Unknown action: ' . $action]);
         break;
 }

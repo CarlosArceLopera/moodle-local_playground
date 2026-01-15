@@ -114,7 +114,8 @@ class request {
         $data = new \stdClass();
         $data->fullname = $fullname;
         $data->shortname = $shortname;
-        $data->idnumber = $idNumber;
+        //$data->idnumber = $idNumber;
+        $data->idnumber = ''; // Leave ID number blank as requested
         $data->visible = 1;
         $data->category = $categoryId;
         $data->enablecompletion = 1;

@@ -17,5 +17,5 @@ $string["enrol_confirmation_subject"] = "Votre cours de bac à sable a été cr�
 $string["pluginname"] = "Création de bac à sable";
 $string["privacy:metadata"] = "Ce plugin ne stocke aucune donnée utilisateur. Il crée simplement des cours et inscrit l\'utilisateur connecté.";
 $string["playground_completed_text"] = "Votre nouveau cours de bac à sable a été créé. Cliquez sur le bouton ci-dessous pour accéder à votre cours.<br>";
-$string["playground_course_name"] = "Cours de bac à sable";
+$string["playground_course_name"] = "Mon cours de bac à sable";
 
