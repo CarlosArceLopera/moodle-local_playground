@@ -12,7 +12,18 @@
 // Comment this out if you want to see debugging messages during development
 define('AJAX_SCRIPT', true);
 
-require_once(__DIR__ . '/../../config.php');
+// Add error logging for server debugging
+error_log('PLAYGROUND: Starting ajax.php from ' . __DIR__);
+error_log('PLAYGROUND: Config path will be ' . __DIR__ . '/../../../config.php');
+
+require_once(__DIR__ . '/../../../config.php');
+
+// Log $CFG state after loading config
+global $CFG;
+error_log('PLAYGROUND: Config loaded. $CFG->wwwroot = ' . ($CFG->wwwroot ?? 'NOT SET'));
+error_log('PLAYGROUND: $CFG->libdir = ' . ($CFG->libdir ?? 'NOT SET'));
+error_log('PLAYGROUND: $CFG->dirroot = ' . ($CFG->dirroot ?? 'NOT SET'));
+
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/classes/request.php');
 
