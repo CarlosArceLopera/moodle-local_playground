@@ -9,14 +9,41 @@
  */
 
 // Define AJAX_SCRIPT to suppress debugging output in the response
-// Comment this out if you want to see debugging messages during development
 define('AJAX_SCRIPT', true);
+
+// Prevent session updates during AJAX calls - reduces session lock contention
+// This is especially important with database or Redis session handlers
+define('NO_SESSION_UPDATE', true);
+
+// Set JSON header early to ensure proper response format
+header('Content-Type: application/json');
 
 // Add error logging for server debugging
 error_log('PLAYGROUND: Starting ajax.php from ' . __DIR__);
 error_log('PLAYGROUND: Config path will be ' . __DIR__ . '/../../../config.php');
 
-require_once(__DIR__ . '/../../../config.php');
+// Try to load config and handle cache/session initialization errors
+try {
+    require_once(__DIR__ . '/../../../config.php');
+} catch (Exception $e) {
+    error_log('PLAYGROUND: FATAL - Failed to load config.php: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Server configuration error. Please check cache configuration.',
+        'debug' => 'Failed to initialize Moodle environment'
+    ]);
+    exit;
+} catch (Error $e) {
+    error_log('PLAYGROUND: FATAL - PHP Error loading config.php: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Server configuration error. Please check cache configuration.',
+        'debug' => 'Fatal PHP error during initialization'
+    ]);
+    exit;
+}
 
 // Log $CFG state after loading config
 global $CFG;
@@ -27,12 +54,19 @@ error_log('PLAYGROUND: $CFG->dirroot = ' . ($CFG->dirroot ?? 'NOT SET'));
 require_once(__DIR__ . '/locallib.php');
 require_once(__DIR__ . '/classes/request.php');
 
-// Set JSON header early to ensure proper response format
-header('Content-Type: application/json');
+// Verify session key early to prevent CSRF attacks (Moodle 5.1 AJAX standard)
+if (!confirm_sesskey()) {
+    error_log('PLAYGROUND: Invalid session key');
+    http_response_code(403);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Invalid session key. Please refresh the page and try again.'
+    ]);
+    exit;
+}
 
 try {
     require_login();
-    require_sesskey();
 
     // Check if user is eligible to create playground courses
     if (!local_playground_is_user_eligible()) {
@@ -44,6 +78,7 @@ try {
         exit;
     }
 } catch (Exception $e) {
+    error_log('PLAYGROUND: Authentication error: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'success' => false,
