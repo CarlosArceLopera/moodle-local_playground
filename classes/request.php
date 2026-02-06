@@ -81,18 +81,15 @@ class request {
         require_login(1, false);
         include_once ( $CFG->dirroot . '/course/lib.php');
 
-        $idNumber = 'sandbox_' . $userid . '_';
-
-        for ($i = 0; $i < 1000; $i++) {
-            if (!$DB->get_record('course', array('idnumber' => $idNumber . $i))) {
-                $idNumber = $idNumber . $i;
-                break;
-            }
-        }
-
         $user = $DB->get_record('user', array('id' => $userid));
         $fullname = get_string('playground_course_name', 'local_playground') . " " . $title;
-        $shortname = get_string('playground_course_name', 'local_playground') . ' ' . fullname($user) . ' ' . $i;
+
+        // Generate unique shortname using timestamp for instant creation
+        // Test/playground courses should not have idnumbers as per best practice
+        // Using microtime ensures uniqueness without database queries for optimal performance
+        $baseShortname = get_string('playground_course_name', 'local_playground') . ' ' . fullname($user);
+        $uniqueId = substr(str_replace('.', '', microtime(true)), -8); // Last 8 digits of microtime
+        $shortname = $baseShortname . ' ' . $uniqueId;
 
         // Get the configured playground category from settings.
         $categoryId = get_config('local_playground', 'playground_category');
