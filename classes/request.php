@@ -93,9 +93,9 @@ class request {
         $shortname = $baseShortname . ' ' . $uniqueHash;
 
         // Generate unique idnumber for external integrations (LTI, web services, SIS, etc.)
-        // Format: playground_userid_hash - maintains consistent naming with plugin terminology
+        // Format: playground_hash - hash already includes userid for uniqueness without exposing it
         // Using hash instead of counting courses avoids database queries for optimal performance
-        $idnumber = 'playground_' . $userid . '_' . $uniqueHash;
+        $idnumber = 'playground_' . $uniqueHash;
 
         // Get the configured playground category from settings.
         $categoryId = get_config('local_playground', 'playground_category');
