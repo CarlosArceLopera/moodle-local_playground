@@ -84,12 +84,18 @@ class request {
         $user = $DB->get_record('user', array('id' => $userid));
         $fullname = get_string('playground_course_name', 'local_playground') . " " . $title;
 
-        // Generate unique shortname using timestamp for instant creation
-        // Test/playground courses should not have idnumbers as per best practice
-        // Using microtime ensures uniqueness without database queries for optimal performance
+        // Generate unique shortname for instant creation without database queries
+        // Use hash of userid+microtime to ensure uniqueness without exposing user IDs (security)
+        // Hash ensures: no user enumeration, privacy protection, handles multiple courses per user
+        // Format: "My Playground Course John Doe a1b2c3d4" where a1b2c3d4 is unique hash
         $baseShortname = get_string('playground_course_name', 'local_playground') . ' ' . fullname($user);
-        $uniqueId = substr(str_replace('.', '', microtime(true)), -8); // Last 8 digits of microtime
-        $shortname = $baseShortname . ' ' . $uniqueId;
+        $uniqueHash = substr(md5($userid . microtime(true)), 0, 8); // 8-char hash for brevity
+        $shortname = $baseShortname . ' ' . $uniqueHash;
+
+        // Generate unique idnumber for external integrations (LTI, web services, SIS, etc.)
+        // Format: playground_userid_hash - maintains consistent naming with plugin terminology
+        // Using hash instead of counting courses avoids database queries for optimal performance
+        $idnumber = 'playground_' . $userid . '_' . $uniqueHash;
 
         // Get the configured playground category from settings.
         $categoryId = get_config('local_playground', 'playground_category');
@@ -111,8 +117,7 @@ class request {
         $data = new \stdClass();
         $data->fullname = $fullname;
         $data->shortname = $shortname;
-        //$data->idnumber = $idNumber;
-        $data->idnumber = ''; // Leave ID number blank as requested
+        $data->idnumber = $idnumber; // Unique playground identifier for external integrations
         $data->visible = 1;
         $data->category = $categoryId;
         $data->enablecompletion = 1;
