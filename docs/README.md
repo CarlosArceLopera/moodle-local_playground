@@ -49,7 +49,7 @@ These settings determine which users are eligible to see and use the "Create Pla
 
 | Setting | Config key | Default | Purpose |
 |---------|-----------|---------|---------|
-| Profile field shortname | `profile_field_shortname` | `ldapusertypes` | Shortname of the custom profile field that holds the LDAP user type (e.g. `ldapusertypes`) |
+| Profile field shortname | `profile_field_shortname` | `usertypes` | Shortname of the custom profile field that holds the LDAP user type (e.g. `usertypes`) |
 | Allowed user types | `allowed_user_types` | `staff,employee` | Comma-separated list of LDAP usertype values that are permitted. Exact whole-value match — `student` or `formerstudent` will never match `staff`. |
 | Allowed ID number prefixes | `allowed_idnumber_prefixes` | `1,5` | Comma-separated list of `idnumber` prefixes. York staff numbers start with `1` or `5`. Empty idnumbers always fail. |
 | Require both conditions | `require_both_conditions` | `1` (checked) | When checked: user must pass **both** the usertype AND the idnumber check. Recommended to keep enabled. |

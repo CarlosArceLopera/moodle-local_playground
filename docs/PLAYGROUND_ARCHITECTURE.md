@@ -60,7 +60,7 @@ Navigate to: **Admin › Plugins › Local plugins › Playground**
 | Setting | Config key | Default | Purpose |
 |---------|-----------|---------|---------|
 | Playground category | `playground_category` | _(select)_ | Moodle category where sandbox courses are created |
-| Profile field shortname | `profile_field_shortname` | `ldapusertypes` | Shortname of the custom profile field that holds the LDAP user type value (e.g. `ldapusertypes`) |
+| Profile field shortname | `profile_field_shortname` | `usertypes` | Moodle custom profile field shortname that holds the LDAP user type value (e.g. `usertypes`) |
 | Allowed user types | `allowed_user_types` | `staff,employee` | Comma-separated list of LDAP usertype values that are permitted. **Must be exact whole values** — partial matches are not accepted. |
 | Allowed ID number prefixes | `allowed_idnumber_prefixes` | `1,5` | Comma-separated list of `idnumber` prefixes. A staff employee number starting with `1` or `5` matches. |
 | Require both conditions | `require_both_conditions` | `1` (checked) | When checked: user must pass **both** the usertype AND the idnumber check. When unchecked: profile field is still the primary gate (see OR Logic section below). |
