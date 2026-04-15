@@ -43,7 +43,7 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_playground/profile_field_shortname',
         get_string('profile_field_shortname', 'local_playground'),
         get_string('profile_field_shortname_desc', 'local_playground'),
-        'ldapusertypes',
+        'usertypes',
         PARAM_ALPHANUMEXT));
 
     // Allowed user types (comma-separated)

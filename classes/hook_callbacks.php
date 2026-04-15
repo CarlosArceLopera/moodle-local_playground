@@ -36,7 +36,21 @@ class hook_callbacks {
             return;
         }
 
-        // Check if user is eligible to create playground courses
+        // Explicitly exclude dashboard and my-pages — the footer hook handles those.
+        $excludedpagetypes = ['my-index', 'site-index', 'dashboard'];
+        if (in_array($PAGE->pagetype, $excludedpagetypes)) {
+            return;
+        }
+
+        // Exclude any URL under /my/ as belt-and-suspenders.
+        if (strpos($PAGE->url->get_path(), '/my/') !== false) {
+            return;
+        }
+
+        // Check eligibility against $USER — when an admin uses "Log in as", $USER
+        // is the impersonated user. This is intentional: a tester should see exactly
+        // what the impersonated user sees. A student's $USER will fail eligibility
+        // and the button will correctly be hidden, matching the real student experience.
         if (!\local_playground_is_user_eligible()) {
             return;
         }
@@ -97,7 +111,8 @@ class hook_callbacks {
             return;
         }
 
-        // Check if user is eligible to create playground courses
+        // Check eligibility against $USER — intentionally uses the impersonated
+        // user during "Log in as" so testers see exactly what that user sees.
         if (!\local_playground_is_user_eligible()) {
             return;
         }

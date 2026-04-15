@@ -77,23 +77,25 @@ function local_playground_is_user_eligible($user = null) {
 
     // Check profile field if configured
     if ($profile_checking_enabled) {
-        $profile_field = $DB->get_record('user_info_field', array('shortname' => $profile_field_shortname));
+        $profile_field = $DB->get_record('user_info_field', ['shortname' => $profile_field_shortname]);
 
         if ($profile_field) {
-            $profile_data = $DB->get_record('user_info_data', array(
-                'userid' => $user->id,
-                'fieldid' => $profile_field->id
-            ));
+            $profile_data = $DB->get_record('user_info_data', [
+                'userid'  => $user->id,
+                'fieldid' => $profile_field->id,
+            ]);
 
             if ($profile_data && !empty($profile_data->data)) {
-                $ldap_user_types = strtolower(trim($profile_data->data));
+                // Normalise — LDAP may return a single type or comma-separated list.
+                $ldap_user_types = array_filter(array_map('trim', explode(',', strtolower($profile_data->data))));
 
-                // Parse allowed user types (comma-separated)
-                $allowed_types = array_map('trim', explode(',', strtolower($allowed_user_types_config)));
+                // Parse allowed user types (comma-separated from config).
+                $allowed_types = array_filter(array_map('trim', explode(',', strtolower($allowed_user_types_config))));
 
-                // Check if user has any of the allowed types
-                foreach ($allowed_types as $type) {
-                    if (!empty($type) && strpos($ldap_user_types, $type) !== false) {
+                // Exact whole-value match — strpos('student','staff') would fail
+                // but strpos('staffstudent','staff') would wrongly pass.
+                foreach ($ldap_user_types as $usertype) {
+                    if (in_array($usertype, $allowed_types)) {
                         $has_allowed_type = true;
                         break;
                     }
@@ -102,54 +104,56 @@ function local_playground_is_user_eligible($user = null) {
         }
     }
 
-    // Check ID number if configured
+    // Check ID number if configured.
     if ($idnumber_checking_enabled) {
         $idnumber = isset($user->idnumber) ? trim($user->idnumber) : '';
 
+        // Guard: empty idnumber — cannot satisfy the prefix check.
+        // A student with no idnumber must not accidentally pass via this route.
         if (!empty($idnumber)) {
-            // Parse allowed prefixes (comma-separated)
-            $allowed_prefixes = array_map('trim', explode(',', $allowed_idnumber_prefixes_config));
+            // Parse allowed prefixes (comma-separated).
+            $allowed_prefixes = array_filter(array_map('trim', explode(',', $allowed_idnumber_prefixes_config)));
 
-            // Check if ID number starts with any of the allowed prefixes
+            // substr for exact prefix-from-start match — strpos could match
+            // the prefix anywhere in the string, not just at position 0.
             foreach ($allowed_prefixes as $prefix) {
-                if (!empty($prefix) && strpos($idnumber, $prefix) === 0) {
+                if (!empty($prefix) && substr($idnumber, 0, strlen($prefix)) === $prefix) {
                     $has_valid_idnumber = true;
                     break;
                 }
             }
         }
+        // If idnumber is empty, $has_valid_idnumber stays false — correct.
     }
 
-    // Return based on require_both setting and which checks are enabled
+    // Return based on require_both setting and which checks are enabled.
     if ($require_both) {
-        // User must meet ALL enabled conditions
+        // User must meet ALL enabled conditions.
         if ($profile_checking_enabled && $idnumber_checking_enabled) {
-            // Both checks enabled: user must pass both
             return ($has_allowed_type && $has_valid_idnumber);
         } else if ($profile_checking_enabled) {
-            // Only profile check is enabled, user must pass it
             return $has_allowed_type;
         } else if ($idnumber_checking_enabled) {
-            // Only ID number check is enabled, user must pass it
             return $has_valid_idnumber;
-        } else {
-            // No checks enabled (shouldn't reach here due to earlier check)
-            return false;
         }
+        return false;
     } else {
-        // User can meet ANY enabled condition (OR logic)
+        // OR logic — but the profile field is ALWAYS the primary gate when
+        // configured. The idnumber prefix alone cannot grant access because:
+        //   1. Students can have idnumbers that start like staff numbers.
+        //   2. A student with NO idnumber would fall through to false anyway.
+        // The idnumber check is only a standalone gate when no profile field
+        // is configured at all.
         if ($profile_checking_enabled && $idnumber_checking_enabled) {
-            // Both checks enabled: pass if user meets either
-            return ($has_allowed_type || $has_valid_idnumber);
+            // Profile field is the primary gate — usertype must pass.
+            return $has_allowed_type;
         } else if ($profile_checking_enabled) {
-            // Only profile check is enabled, user must pass it
             return $has_allowed_type;
         } else if ($idnumber_checking_enabled) {
-            // Only ID number check is enabled, user must pass it
+            // No profile field configured — idnumber is the only check.
+            // Empty idnumber already handled above → $has_valid_idnumber = false.
             return $has_valid_idnumber;
-        } else {
-            // No checks enabled (shouldn't reach here due to earlier check)
-            return false;
         }
+        return false;
     }
 }
